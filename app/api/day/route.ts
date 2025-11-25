@@ -42,7 +42,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { field, value } = body;
+    const { field, value, lock } = body;
 
     const todayDate = getTodayDate();
 
@@ -64,8 +64,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(newRecord);
     }
 
+    // Don't allow updates if locked
+    if (record.isLocked && !lock) {
+      return NextResponse.json(record);
+    }
+
+    const updateData: any = { updatedAt: new Date() };
+
+    if (lock) {
+      updateData.isLocked = true;
+      updateData.completedAt = new Date();
+    } else if (field) {
+      updateData[field] = value;
+    }
+
     await db.update(day)
-      .set({ [field]: value, updatedAt: new Date() })
+      .set(updateData)
       .where(eq(day.date, todayDate));
 
     const updated = await db.select().from(day).where(eq(day.date, todayDate)).get();
