@@ -116,7 +116,7 @@ export default function Home() {
   return (
     <main className="min-h-screen w-full flex items-center justify-center bg-white py-16 relative">
       {/* Breathing cue */}
-      <div className="fixed top-8 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-gray-300 animate-pulse"
+      <div className="fixed top-8 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-gray-300/60 blur-[0.5px] animate-pulse"
            style={{ animationDuration: '4s' }} />
 
       {/* Streak counter */}
